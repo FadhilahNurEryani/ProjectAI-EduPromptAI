@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 import { getCurrentUser } from "@/lib/auth/session"
 import { prisma } from "@/lib/db/prisma"
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser()
     if (!user) {
@@ -44,14 +44,14 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
   try {
     const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const templateId = searchParams.get("templateId")
 
     if (!templateId) {

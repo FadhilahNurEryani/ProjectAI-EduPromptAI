@@ -4,21 +4,6 @@ import GoogleProvider from "next-auth/providers/google"
 import { prisma } from "@/lib/db/prisma"
 import bcrypt from "bcryptjs"
 
-// Extend NextAuth types
-declare module "next-auth" {
-  interface User {
-    id: string
-    role?: string
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string
-    role?: string
-  }
-}
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({

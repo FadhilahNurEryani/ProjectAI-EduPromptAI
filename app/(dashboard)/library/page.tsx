@@ -11,10 +11,18 @@ export default async function LibraryPage({
 }: {
   searchParams: { category?: string; search?: string }
 }) {
-  const categories = await prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
-  })
+  let categories: Array<{ id: string; name: string }> = []
+  if (process.env.DATABASE_URL) {
+    try {
+      categories = await prisma.category.findMany({
+        where: { isActive: true },
+        orderBy: { sortOrder: "asc" },
+      })
+    } catch (e) {
+      console.error("Error fetching categories:", e)
+      categories = []
+    }
+  }
 
   const where: {
     isActive: boolean
@@ -36,13 +44,21 @@ export default async function LibraryPage({
     ]
   }
 
-  const templates = await prisma.promptTemplate.findMany({
-    where,
-    include: {
-      category: true,
-    },
-    orderBy: { usageCount: "desc" },
-  })
+  let templates: any[] = []
+  if (process.env.DATABASE_URL) {
+    try {
+      templates = await prisma.promptTemplate.findMany({
+        where,
+        include: {
+          category: true,
+        },
+        orderBy: { usageCount: "desc" },
+      })
+    } catch (e) {
+      console.error("Error fetching templates:", e)
+      templates = []
+    }
+  }
 
   return (
     <DashboardLayout>

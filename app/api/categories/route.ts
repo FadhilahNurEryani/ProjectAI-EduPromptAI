@@ -3,6 +3,10 @@ import { prisma } from "@/lib/db/prisma"
 
 export async function GET() {
   try {
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json([])
+    }
+
     const categories = await prisma.category.findMany({
       where: { isActive: true },
       orderBy: { sortOrder: "asc" },

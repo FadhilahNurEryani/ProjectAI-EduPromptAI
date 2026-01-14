@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
+
+export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/db/prisma"
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = request.nextUrl
     const categoryId = searchParams.get("category")
     const search = searchParams.get("search")
     const featured = searchParams.get("featured") === "true"
